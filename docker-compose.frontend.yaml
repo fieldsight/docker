@@ -21,7 +21,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     env_file:
       - env.txt
-      - envfiles/db.txt
+      - db.txt
     volumes:
       - ../kpi/:/srv/src/kpi/
     ports:

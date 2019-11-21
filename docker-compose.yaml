@@ -41,8 +41,8 @@ services:
       file: docker-compose.frontend.yaml
       service: kpi
     links:
-      - fieldsight
-      - enketo
+      - postgres
+      - mongo
     depends_on:
       - postgres
       - redis_main
@@ -55,13 +55,19 @@ services:
     depends_on:
       - postgres
       - redis_main
-    links:
-      - fieldsight
 
   nginx:
     extends: 
       file: docker-compose.frontend.yaml
       service: nginx
+    depends_on:
+      - enketo
+      - kpi
+      - fieldsight
+    links:
+      - enketo
+      - kpi
+      - fieldsight
 #------------------------------------------------------------------------------------------
 #                     end of frontend services
 #------------------------------------------------------------------------------------------
