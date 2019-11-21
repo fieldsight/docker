@@ -1,0 +1,67 @@
+version: '2.1'
+
+services:
+#----------------------------------------------------------------------------------------------  
+#                start of backend services
+#-----------------------------------------------------------------------------------------------
+  postgres:
+    extends: 
+      file: docker-compose.backend.yaml
+      service: postgres
+   
+  mongo:
+    extends: 
+      file: docker-compose.backend.yaml
+      service: mongo
+
+  redis_main:
+    extends: 
+      file: docker-compose.backend.yaml
+      service: redis_main
+
+  redis_cache:
+    extends: 
+      file: docker-compose.backend.yaml
+      service: redis_cache
+  #--------------------------------------------------------------------
+  #               end of backend services
+  #-------------------------------------------------------------------
+  #-------------------------------------------------------------------
+  #               start of front end services
+  #--------------------------------------------------------------------
+  fieldsight:
+    extends: 
+      file: docker-compose.frontend.yaml
+      service: fieldsight
+    depends_on:
+      - postgres
+
+  kpi:
+    extends: 
+      file: docker-compose.frontend.yaml
+      service: kpi
+    links:
+      - fieldsight
+      - enketo
+    depends_on:
+      - postgres
+      - redis_main
+      - redis_cache
+
+  enketo:
+    extends: 
+      file: docker-compose.frontend.yaml
+      service: enketo
+    depends_on:
+      - postgres
+      - redis_main
+    links:
+      - fieldsight
+
+  nginx:
+    extends: 
+      file: docker-compose.frontend.yaml
+      service: nginx
+#------------------------------------------------------------------------------------------
+#                     end of frontend services
+#------------------------------------------------------------------------------------------
