@@ -8,6 +8,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - ../fieldsight/:/usr/src/data/
+      - ./.vols/static/fieldsight:/usr/src/data/kobocat-template/static/
     ports:
       - 8001:8001
     env_file:
@@ -47,6 +48,7 @@ services:
       - ./nginxlog:/var/log/nginx/
       - ./nginx:/etc/nginx/conf.d/
       - ./certs:/etc/ssl/certs/
+      - ./.vols/static/fieldsight:/static/
     ports:
       - 80:80
       - 443:443

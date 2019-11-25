@@ -1,4 +1,5 @@
-#ssl certificate for local configuration
+ssl certificate for local configuration
+=======================================
 
 To enable the https for the development i.e. for test run the following command to create the ssl certificate. Sample localhost.conf is inside certs folder. Donot copy the sample certificate file, create one.
 
