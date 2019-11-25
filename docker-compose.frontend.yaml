@@ -9,6 +9,7 @@ services:
     volumes:
       - ../fieldsight/:/usr/src/data/
       - ./.vols/static/fieldsight:/usr/src/data/kobocat-template/static/
+      - ./.vols/media/fieldsight:/usr/src/data/media/
     ports:
       - 8001:8001
     env_file:
