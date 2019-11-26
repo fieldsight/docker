@@ -5,11 +5,12 @@ services:
     image: fieldsight/fieldsight:0.0.1
     restart: always
     container_name: fieldsight_web
-    command: python manage.py runserver 0.0.0.0:8001
+    command: ['/scripts/wait-until.sh', 'postgres:5432', '--', '/scripts/run_kobocat.sh']
     volumes:
       - ../fieldsight/:/usr/src/data/
       - ./.vols/static/fieldsight:/usr/src/data/kobocat-template/static/
       - ./.vols/media/fieldsight:/usr/src/data/media/
+      - ./scripts:/usr/src/data/scripts/
     ports:
       - 8001:8001
     env_file:
@@ -20,12 +21,14 @@ services:
     image: fieldsight/kpi:0.0.1
     restart: on-failure
     container_name: fieldsight_kpi
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ['/scripts/wait-until.sh', 'postgres:5432', '--', '/scripts/run_kpi.sh']
     env_file:
       - env.txt
       - db.txt
     volumes:
       - ../kpi/:/srv/src/kpi/
+      - ./scripts:/srv/src/kpi/scripts/
+      - ./.vols/media/kpi:/srv/src/kpi/media/
     ports:
       - 8000:8000
 
@@ -33,9 +36,10 @@ services:
     image: fieldsight/fieldsight_enketo:0.0.1
     restart: on-failure
     container_name: fieldsight_enketo
-    command: npm start
+    command: ['/scripts/wait-until.sh', 'postgres:5432', '/scripts/run_enketo.sh']
     volumes:
       - ../enketo-express/:/srv/src/enketo_express/
+      - ./scripts:/srv/src/enketo_express/scripts/
     env_file:
       - env.txt
       - db.txt
@@ -49,7 +53,8 @@ services:
       - ./nginxlog:/var/log/nginx/
       - ./nginx:/etc/nginx/conf.d/
       - ./certs:/etc/ssl/certs/
-      - ./.vols/static/fieldsight:/static/
+      - ./.vols/static/:/static/
+      - ./.vols/media/:/media/
     ports:
       - 80:80
       - 443:443

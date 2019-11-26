@@ -16,6 +16,8 @@ services:
     image: mongo:3.4
     hostname: mongo
     container_name: fieldsight_mongo
+    volumes:
+      - ./.backup/mongo-data:/data/db
     environment:
       - MONGO_DATA=/data/db
     env_file:
@@ -29,6 +31,8 @@ services:
     image: redis:3.2
     restart: always
     container_name: fieldsight_redis_main
+    volumes:
+      - ./.backup/redis-data:/data
     ports:
       - 6379:6379
     sysctls:
@@ -37,6 +41,8 @@ services:
   redis_cache:
     image: redis:3.2
     restart: on-failure
+    volumes:
+      - ./.backup/redis-data:/data
     container_name: fieldsight_redis_cache
     ports:
       - 6380:6380
