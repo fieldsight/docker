@@ -5,6 +5,8 @@ services:
     image: mdillon/postgis:9.5
     container_name: fieldsight_postgis
     restart: always
+    volumes:
+      - ./.backup/postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     env_file:

@@ -3,3 +3,4 @@ db.txt
 nginxlog/
 config.json
 .vols/
+.backup/
