@@ -4,3 +4,5 @@ nginxlog/
 config.json
 .vols/
 .backup/
+log/
+fixes/

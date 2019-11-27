@@ -35,6 +35,9 @@ services:
       service: fieldsight
     depends_on:
       - postgres
+      - mongo
+      - redis_main
+      - redis_cache
 
   kpi:
     extends: 
