@@ -7,6 +7,7 @@ services:
     container_name: fieldsight_web
     command: /bin/bash ./scripts/run_kobocat.sh
     volumes:
+      - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
       - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
       - ./scripts/run_kobocat.sh:/usr/src/data/scripts/run_kobocat.sh
     ports:
@@ -51,6 +52,7 @@ services:
       - ./nginxlog/:/var/log/nginx/
       - ./nginx/:/etc/nginx/conf.d/
       - ./certs/:/etc/ssl/certs/
+      - ./.vols/static/:/static
     ports:
       - 80:80
       - 443:443

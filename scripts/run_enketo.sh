@@ -1,5 +1,5 @@
 #!/bin/bash
-npm install
+npm install -g
 npm run generate-icons
 npm run copy-fonts
-npm run build
+npm start
