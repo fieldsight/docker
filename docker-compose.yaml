@@ -1,76 +1,161 @@
-version: '2.1'
+version: '3'
 
 services:
-#----------------------------------------------------------------------------------------------  
-#                start of backend services
-#-----------------------------------------------------------------------------------------------
   postgres:
-    extends: 
-      file: docker-compose.backend.yaml
-      service: postgres
-   
+    image: mdillon/postgis:9.5
+    container_name: fieldsight_postgis
+    restart: always
+    volumes:
+      - ./.backup/postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - db.txt
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - postgres
+
   mongo:
-    extends: 
-      file: docker-compose.backend.yaml
-      service: mongo
+    image: mongo:3.4
+    hostname: mongo
+    container_name: fieldsight_mongo
+    volumes:
+      - ./.backup/mongo-data:/data/db
+    environment:
+      - MONGO_DATA=/data/db
+    env_file:
+      - env.txt
+      - db.txt
+    ports:
+      - 27017:27017
+    restart: on-failure
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - mongo
 
   redis_main:
-    extends: 
-      file: docker-compose.backend.yaml
-      service: redis_main
+    image: redis:3.2
+    restart: always
+    container_name: fieldsight_redis_main
+    volumes:
+      - ./.backup/redis-data:/data
+    ports:
+      - 6379:6379
+    sysctls:
+      - net.core.somaxconn=2048
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - redis_main
 
   redis_cache:
-    extends: 
-      file: docker-compose.backend.yaml
-      service: redis_cache
-  #--------------------------------------------------------------------
-  #               end of backend services
-  #-------------------------------------------------------------------
-  #-------------------------------------------------------------------
-  #               start of front end services
-  #--------------------------------------------------------------------
+    image: redis:3.2
+    restart: on-failure
+    volumes:
+      - ./.backup/redis-data:/data
+    container_name: fieldsight_redis_cache
+    ports:
+      - 6380:6380
+    sysctls:
+        - net.core.somaxconn=2048
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - redis_cache
+
   fieldsight:
-    extends: 
-      file: docker-compose.frontend.yaml
-      service: fieldsight
+    image: fieldsight/fieldsight:0.0.1
+    restart: always
+    hostname: kobo
+    container_name: fieldsight_web
+    command: /bin/bash ./scripts/run_kobocat.sh
+    volumes:
+      - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
+      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
+      - ./scripts/run_kobocat.sh:/usr/src/data/scripts/run_kobocat.sh
+    ports:
+      - 8001:8001
+    env_file:
+      - env.txt
+      - db.txt
     depends_on:
       - postgres
       - mongo
-      - redis_main
-      - redis_cache
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - kobo
 
   kpi:
-    extends: 
-      file: docker-compose.frontend.yaml
-      service: kpi
-    links:
+    image: fieldsight/kpi:0.0.1
+    restart: on-failure
+    hostname: kpi
+    container_name: fieldsight_kpi
+    command: /bin/bash ./scripts/run_kpi.sh
+    env_file:
+      - env.txt
+      - db.txt
+    volumes:
+      - ./fixes/local_settings.py:/srv/src/kpi/kobo/local_settings.py
+      - ./log/kpi:/srv/logs
+      - ./scripts/run_kpi.sh:/srv/src/kpi/scripts/run_kpi.sh
+    ports:
+      - 8000:8000
+    depends_on:
       - postgres
       - mongo
-    depends_on:
-      - postgres
-      - redis_main
-      - redis_cache
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - kpi
 
   enketo:
-    extends: 
-      file: docker-compose.frontend.yaml
-      service: enketo
+    image: fieldsight/fieldsight_enketo:0.0.1
+    restart: on-failure
+    container_name: fieldsight_enketo
+    command: /bin/bash ./scripts/run_enketo.sh
+    volumes:
+      - ./scripts/run_enketo.sh:/srv/src/enketo_express/scripts/run_enketo.sh
+      - ./fixes/config.json:/srv/src/enketo_express/config/config.json
+    env_file:
+      - env.txt
+      - db.txt
+    ports:
+      - 8005:8005
     depends_on:
-      - postgres
-      - redis_main
+      - kpi
+      - fieldsight
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - enketo_express
 
   nginx:
-    extends: 
-      file: docker-compose.frontend.yaml
-      service: nginx
+    image: nginx:1.17.2-alpine
+    hostname: nginx
+    container_name: fieldsight_nginx
+    volumes:
+      - ./nginxlog/:/var/log/nginx/
+      - ./nginx/:/etc/nginx/conf.d/
+      - ./certs/:/etc/ssl/certs/
+      - ./.vols/static/:/static
+    ports:
+      - 80:80
+      - 443:443
     depends_on:
       - enketo
       - kpi
       - fieldsight
-    links:
-      - enketo
-      - kpi
-      - fieldsight
-#------------------------------------------------------------------------------------------
-#                     end of frontend services
-#------------------------------------------------------------------------------------------
+    networks:
+      fieldsight-fe-network:
+        aliases:
+          - nginx
+          - kpi.fieldsight.test
+          - enketo.fieldsight.test
+          - kobo.fieldsight.test
+
+networks:
+  fieldsight-fe-network:
+    driver: bridge
