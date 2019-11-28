@@ -12,7 +12,7 @@ services:
     env_file:
       - db.txt
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - postgres
 
@@ -31,7 +31,7 @@ services:
       - 27017:27017
     restart: on-failure
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - mongo
 
@@ -46,7 +46,7 @@ services:
     sysctls:
       - net.core.somaxconn=2048
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - redis_main
 
@@ -61,7 +61,7 @@ services:
     sysctls:
         - net.core.somaxconn=2048
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - redis_cache
 
@@ -84,7 +84,7 @@ services:
       - postgres
       - mongo
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - kobo
 
@@ -107,7 +107,7 @@ services:
       - postgres
       - mongo
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - kpi
 
@@ -128,7 +128,7 @@ services:
       - kpi
       - fieldsight
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - enketo_express
 
@@ -149,7 +149,7 @@ services:
       - kpi
       - fieldsight
     networks:
-      fieldsight-fe-network:
+      fieldsight-network:
         aliases:
           - nginx
           - kpi.fieldsight.test
@@ -157,5 +157,5 @@ services:
           - kobo.fieldsight.test
 
 networks:
-  fieldsight-fe-network:
+  fieldsight-network:
     driver: bridge
