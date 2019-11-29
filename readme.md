@@ -15,3 +15,11 @@ Fieldsight Docker
  2. Postgis(postgres extension)
  3. Redis
 
+Setting up docker
+==================
+
+1. Copy the sample envfiles from envfiles folder and edit with valid credintials
+2. Run the containers
+   ``` docker-compose -f docker-compose.backend.yaml -f docker-compose.frontend.yaml up -d ```
+
+

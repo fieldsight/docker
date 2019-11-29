@@ -9,7 +9,7 @@ services:
     command: /bin/bash ./scripts/run_kobocat.sh
     volumes:
       - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
-      - ./.vols/media/fieldsight/:/usr/src/data/kobocat/media/
+      - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
       - ./scripts/run_kobocat.sh:/usr/src/data/scripts/run_kobocat.sh
     ports:
