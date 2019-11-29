@@ -1,70 +1,6 @@
 version: '3'
 
 services:
-  postgres:
-    image: mdillon/postgis:9.5
-    container_name: fieldsight_postgis
-    restart: always
-    volumes:
-      - ./.backup/postgres-data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    env_file:
-      - db.txt
-    networks:
-      fieldsight-network:
-        aliases:
-          - postgres
-
-  mongo:
-    image: mongo:3.4
-    hostname: mongo
-    container_name: fieldsight_mongo
-    volumes:
-      - ./.backup/mongo-data:/data/db
-    environment:
-      - MONGO_DATA=/data/db
-    env_file:
-      - env.txt
-      - db.txt
-    ports:
-      - 27017:27017
-    restart: on-failure
-    networks:
-      fieldsight-network:
-        aliases:
-          - mongo
-
-  redis_main:
-    image: redis:3.2
-    restart: always
-    container_name: fieldsight_redis_main
-    volumes:
-      - ./.backup/redis-data:/data
-    ports:
-      - 6379:6379
-    sysctls:
-      - net.core.somaxconn=2048
-    networks:
-      fieldsight-network:
-        aliases:
-          - redis_main
-
-  redis_cache:
-    image: redis:3.2
-    restart: on-failure
-    volumes:
-      - ./.backup/redis-data:/data
-    container_name: fieldsight_redis_cache
-    ports:
-      - 6380:6380
-    sysctls:
-        - net.core.somaxconn=2048
-    networks:
-      fieldsight-network:
-        aliases:
-          - redis_cache
-
   fieldsight:
     image: fieldsight/fieldsight:0.0.1
     restart: always
@@ -73,6 +9,7 @@ services:
     command: /bin/bash ./scripts/run_kobocat.sh
     volumes:
       - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
+      - ./.vols/media/fieldsight/:/usr/src/data/kobocat/media/
       - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
       - ./scripts/run_kobocat.sh:/usr/src/data/scripts/run_kobocat.sh
     ports:
@@ -101,6 +38,7 @@ services:
       - ./fixes/local_settings.py:/srv/src/kpi/kobo/local_settings.py
       - ./log/kpi:/srv/logs
       - ./scripts/run_kpi.sh:/srv/src/kpi/scripts/run_kpi.sh
+      - ./.vols/media/fieldsight/:/srv/src/kobocat/media/
     ports:
       - 8000:8000
     depends_on:
@@ -119,6 +57,10 @@ services:
     volumes:
       - ./scripts/run_enketo.sh:/srv/src/enketo_express/scripts/run_enketo.sh
       - ./fixes/config.json:/srv/src/enketo_express/config/config.json
+      - ./.vols/enketo_express/checksum:/srv/src/enketo_express/checksum
+      - ./.vols/enketo_express/build/css:/srv/src/enketo_express/public/css
+      - ./.vols/enketo_express/build/js:/srv/src/enketo_express/public/js/build
+      - ./.vols/enketo_express/build/locales:/srv/src/enketo_express/locales/build
     env_file:
       - env.txt
       - db.txt
@@ -141,6 +83,7 @@ services:
       - ./nginx/:/etc/nginx/conf.d/
       - ./certs/:/etc/ssl/certs/
       - ./.vols/static/:/static
+      - ./.vols/media/:/media
     ports:
       - 80:80
       - 443:443

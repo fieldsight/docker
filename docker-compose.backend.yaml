@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  postgres:
+    image: mdillon/postgis:9.5
+    container_name: fieldsight_postgis
+    restart: always
+    volumes:
+      - ./.backup/postgres-data/:/var/lib/postgresql/data
+      - ./log/postgres:/srv/logs
+    ports:
+      - 5432:5432
+    env_file:
+      - db.txt
+    networks:
+      fieldsight-network:
+        aliases:
+          - postgres
+
+  mongo:
+    image: mongo:3.4
+    hostname: mongo
+    container_name: fieldsight_mongo
+    volumes:
+      - ./.backup/mongo-data:/data/db
+      - ./log/mongo:/srv/logs
+    environment:
+      - MONGO_DATA=/data/db
+    env_file:
+      - env.txt
+      - db.txt
+    ports:
+      - 27017:27017
+    restart: on-failure
+    networks:
+      fieldsight-network:
+        aliases:
+          - mongo
+
+  redis_main:
+    image: redis:3.2
+    restart: always
+    container_name: fieldsight_redis_main
+    volumes:
+      - ./.backup/redis-data:/data
+      - ./log/redis_main:/var/log/redis
+    ports:
+      - 6379:6379
+    sysctls:
+      - net.core.somaxconn=2048
+    networks:
+      fieldsight-network:
+        aliases:
+          - redis_main
+
+  redis_cache:
+    image: redis:3.2
+    restart: on-failure
+    volumes:
+      - ./.backup/redis-data:/data
+      - ./log/redis_cache:/var/log/redis
+    container_name: fieldsight_redis_cache
+    ports:
+      - 6380:6380
+    sysctls:
+        - net.core.somaxconn=2048
+    networks:
+      fieldsight-network:
+        aliases:
+          - redis_cache
+
+networks:
+  fieldsight-network:
+    external:
+      name: fieldsight-network
