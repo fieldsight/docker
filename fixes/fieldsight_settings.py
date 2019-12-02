@@ -148,8 +148,8 @@ BROKER_BACKEND = "redis"
 BROKER_URL = 'redis://redis_main:6379/1'
 #BROKER_URL = 'amqp://guest:guest@192.168.1.3:5672//'
 CELERY_BROKER_URL = BROKER_URL
-CELERY_RESULT_BACKEND = "redis"
-#REDIS_HOST = "localhost"
+CELERY_RESULT_BACKEND = 'redis://redis_main:6379/1'
+REDIS_HOST = "redis_main"
 
 #BROKER_BACKEND = "redis"
 #BROKER_BACKEND = "amqp"
@@ -229,6 +229,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT= os.path.join(BASE_DIR,'static')
 
 SITE_URL = os.environ.get('KOBOCAT_URL')
+MEDIA_URL = '%s/media/'%os.environ.get('KOBOCAT_URL')
 
 DEFAULT_FORM_2 = {
     'id_string': 'a4MJ2XJ9LEogrkCd8CsHvq',
@@ -252,7 +253,7 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'application/json']
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'localhost:11211',
+        'LOCATION': 'memcached:11211',
     }
 }
 INTERNAL_IPS = ['127.0.0.1']

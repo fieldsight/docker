@@ -17,6 +17,16 @@ services:
         aliases:
           - postgres
 
+  memcached:
+    image: rbekker87/memcached:alpine
+    environment:
+      - MEMCACHED_MEMUSAGE=32
+    ports:
+      - 11211:11211
+    networks:
+      fieldsight-network:
+        aliases:
+          - memcached          
   mongo:
     image: mongo:3.4
     hostname: mongo
@@ -68,6 +78,55 @@ services:
       fieldsight-network:
         aliases:
           - redis_cache
+
+  celery_fieldsight:
+    image: fieldsight/fieldsight:0.0.1
+    restart: on-failure
+    container_name: celery_fieldsight
+    command: celery -A onadata worker -l Info
+    environment:
+      C_FORCE_ROOT: "yes"
+    env_file:
+      - env.txt
+      - db.txt
+    links:
+      - postgres
+      - redis_main
+      - memcached
+    depends_on:
+      - postgres
+      - redis_main
+      - memcached
+    volumes:
+      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
+    networks:
+      fieldsight-network:
+        aliases:
+          - celery_fieldsight
+
+  celery_kpi:
+    image: fieldsight/kpi:0.0.1
+    command: celery -A kobo worker -l Info
+    container_name: celery_kpi
+    environment:
+      C_FORCE_ROOT: "yes"
+    env_file:
+      - env.txt
+      - db.txt
+    links:
+      - postgres
+      - redis_main
+      - memcached
+    depends_on:
+      - postgres
+      - redis_main
+      - memcached
+    volumes:
+      - ./fixes/local_settings.py:/srv/src/kpi/kobo/local_settings.py
+    networks:
+      fieldsight-network:
+        aliases:
+          - celery_kpi
 
 networks:
   fieldsight-network:
