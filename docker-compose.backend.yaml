@@ -19,6 +19,7 @@ services:
 
   memcached:
     image: rbekker87/memcached:alpine
+    container_name: fieldsight_memcached
     environment:
       - MEMCACHED_MEMUSAGE=32
     ports:

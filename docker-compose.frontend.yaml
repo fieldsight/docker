@@ -1,6 +1,30 @@
 version: '3'
 
 services:
+  fieldsight:
+    image: fieldsight/fieldsight:0.0.1
+    restart: always
+    hostname: kobo
+    container_name: fieldsight_web
+    command: /bin/bash ./scripts/run_fieldsight.sh
+    volumes:
+      - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
+      - ./.vols/media/fieldsight/:/usr/src/data/media/
+      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
+      - ./scripts/run_fieldsight.sh:/usr/src/data/scripts/run_fieldsight.sh
+    ports:
+      - 8001:8001
+    env_file:
+      - env.txt
+      - db.txt
+    depends_on:
+      - postgres
+      - mongo
+      - redis_main
+    networks:
+      fieldsight-network:
+        aliases:
+          - kobo
   kpi:
     image: fieldsight/kpi:0.0.1
     restart: on-failure
@@ -21,44 +45,10 @@ services:
       - postgres
       - mongo
       - redis_main
-      - fieldsight
-    links:
-      - postgres
-      - mongo
-      - redis_main 
     networks:
       fieldsight-network:
         aliases:
           - kpi
-
-   fieldsight:
-    image: fieldsight/fieldsight:0.0.1
-    restart: always
-    hostname: kobo
-    container_name: fieldsight_web
-    command: /bin/bash ./scripts/run_kobocat.sh
-    volumes:
-      - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
-      - ./.vols/media/fieldsight/:/usr/src/data/media/
-      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
-      - ./scripts/run_kobocat.sh:/usr/src/data/scripts/run_kobocat.sh
-    ports:
-      - 8001:8001
-    env_file:
-      - env.txt
-      - db.txt
-    depends_on:
-      - postgres
-      - mongo
-      - redis_main
-    links:
-      - postgres
-      - mongo
-      - redis_main
-    networks:
-      fieldsight-network:
-        aliases:
-          - kobo
 
   enketo:
     image: fieldsight/fieldsight_enketo:0.0.1
