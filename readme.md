@@ -16,6 +16,9 @@ Fieldsight Docker
  1. Mongo
  2. Postgis(postgres extension)
  3. Redis
+ 4. Memcached
+ 5. Celery for Fieldsight
+ 6. Celery for Fieldsight-KPI
 
 Setting up docker
 ==================
@@ -52,7 +55,7 @@ This will create the default user name and password
 #### Basic troubleshooting
 Failing the postgres to up can cause the migration fail and shows the internal server error display in browser. Check if postgres is running or not
 
-``` docker inspect -f '{{.State.Running}}' fieldsight_postgres ```
+``` docker inspect -f '{{.State.Running}}' fieldsight_postgis ```
 
 If Enketo keeps on failing, see the docker log
 ``` docker logs -f --tail 100 fieldsight_enketo ```
