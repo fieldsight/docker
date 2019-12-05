@@ -22,24 +22,30 @@ Setting up docker
 ==================
 
 1. Copy the sample envfiles from envfiles folder and edit with valid credintials
+
 	``` cp -r ./envfiles/ ./ ```
 
 2. Change the value in envfiles. envfiles folder consists of two environment file db.txt for database config and env.txt for system config. Please change as required.
 
 3. Get inside the nginx folder and change servername as required
+
    ``` cd nginx ```
    
 4. Run the containers
+
    ``` docker-compose -f docker-compose.backend.yaml -f docker-compose.frontend.yaml up -d ```
 
 5. Check all containers are up
+
    ``` docker ps -a ``` 
    
 6. Run migration inside fieldsight_web container
+
   ``` docker run -it fieldsight_web bash 
       python manage.py migrate
   ```
 7. create the default user
+
  ```
       docker run -it fieldsight_web bash 
       python manage.py fieldsight_default_commands
@@ -47,10 +53,11 @@ Setting up docker
 ```
 This will create the default user name and password
 
-> username: admin
-> password: 123456
+  username: admin
+  password: 123456
 
 #### Basic troubleshooting
+
 Failing the postgres to up can cause the migration fail and shows the internal server error display in browser. Check if postgres is running or not
 
 ``` docker inspect -f '{{.State.Running}}' fieldsight_postgis ```
