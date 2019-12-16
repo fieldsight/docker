@@ -29,7 +29,7 @@ services:
         aliases:
           - memcached          
   mongo:
-    image: mongo:3.4
+    image: mongo:3.0
     hostname: mongo
     container_name: fieldsight_mongo
     volumes:
@@ -99,7 +99,7 @@ services:
       - redis_main
       - memcached
     volumes:
-      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/fieldsight_settings.py
+      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/local_settings.py
     networks:
       fieldsight-network:
         aliases:
