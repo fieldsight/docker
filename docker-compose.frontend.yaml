@@ -2,7 +2,7 @@ version: '3'
 
 services:
   fieldsight:
-    image: fieldsight/fieldsight:0.0.1
+    image: fieldsightdocker/fieldsight_web:0.0.1
     restart: always
     hostname: kobo
     container_name: fieldsight_web
@@ -12,6 +12,7 @@ services:
       - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/local_settings.py
       - ./scripts/run_fieldsight.sh:/usr/src/data/scripts/run_fieldsight.sh
+      - ../fieldsight:/usr/src/data
     ports:
       - 8001:8001
     env_file:
@@ -26,7 +27,7 @@ services:
         aliases:
           - kobo
   kpi:
-    image: fieldsight/kpi:0.0.1
+    image: fieldsightdocker/fieldsight-kpi:0.0.1
     restart: on-failure
     hostname: kpi
     container_name: fieldsight_kpi
@@ -51,7 +52,7 @@ services:
           - kpi
 
   enketo:
-    image: fieldsight/fieldsight_enketo:0.0.1
+    image: fieldsightdocker/fieldsight_enketo:0.0.1
     restart: on-failure
     container_name: fieldsight_enketo
     command: /bin/bash ./scripts/run_enketo.sh
