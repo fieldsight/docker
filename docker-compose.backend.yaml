@@ -99,11 +99,7 @@ services:
       - redis_main
       - memcached
     volumes:
-      - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
-      - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/local_settings.py
-      - ./scripts/run_fieldsight.sh:/usr/src/data/scripts/run_fieldsight.sh
-      - ../fieldsight:/usr/src/data
     networks:
       fieldsight-network:
         aliases:
