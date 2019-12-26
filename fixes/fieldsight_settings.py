@@ -39,7 +39,7 @@ DATABASES = {
 
 INSTALLED_APPS = list(INSTALLED_APPS)
 INSTALLED_APPS += ['rest_framework_docs', 'social_django', 'onadata.apps.eventlog', 'fcm', "debug_toolbar",
-                   'onadata.apps.fieldsight', 'onadata.apps.fsforms',
+                   'onadata.apps.fieldsight', 'onadata.apps.fsforms', 'onadata.apps.reporting',
                    'onadata.apps.geo', 'onadata.apps.remote_app', 'onadata.apps.staff', 'onadata.apps.subscriptions',
                    'onadata.apps.userrole', 'onadata.apps.users','linaro_django_pagination',  'webstack_django_sorting','onadata.apps.fv3']
 
@@ -257,3 +257,4 @@ CACHES = {
     }
 }
 INTERNAL_IPS = ['127.0.0.1']
+MEDIA_LOCATION_URL = "https://naxafieldsight.s3.amazonaws.com/"
