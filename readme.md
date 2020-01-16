@@ -15,8 +15,6 @@ Fieldsight Docker
  2. Postgis(postgres extension)
  3. Redis
  4. Memcached
- 5. Celery for Fieldsight
- 6. Celery for Fieldsight-KPI
 
 Setting up docker
 ==================
