@@ -269,6 +269,6 @@ MEDIA_LOCATION_URL =  os.environ.get('MEDIA_LOCATION_URL', 'https://testbucket.g
 
 DEFAULT_FILE_STORAGE = os.environ.get('DEFAULT_FILE_STORAGE', 'django.core.files.storage.FileSystemStorage')
 GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME', '')
-GS_PROJECT_ID = os.environ.get('GS_BUCKET_NAME', '')
+GS_PROJECT_ID = os.environ.get('GS_PROJECT_ID', '')
 
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', "storage_credentials.json" )
