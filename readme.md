@@ -29,20 +29,33 @@ Setting up docker
 
    ``` cd nginx ```
    
-4. Run the containers
+4. Change the glcoud credintials. Filedsight uses the google bucket storage to store  
+  media file
+
+   ```
+     cd ./fixes
+     cp drive_credintials_sample.json ./drive_credintials.json
+     cp service_account_sample.json ./service_account.json
+     cp settings_sample.json ./settings.json
+     cp storage_credentials_sample.json ./storage_credentials.json
+
+   ```
+   Replace the content of copy of sample with actual project credentails.
+
+5. Run the containers
 
    ``` docker-compose -f docker-compose.backend.yaml -f docker-compose.frontend.yaml up -d ```
 
-5. Check all containers are up
+6. Check all containers are up
 
    ``` docker ps -a ``` 
    
-6. Run migration inside fieldsight_web container
+7. Run migration inside fieldsight_web container
 
   ``` docker run -it fieldsight_web bash 
       python manage.py migrate
   ```
-7. create the default user
+8. create the default user
 
  ```
       docker run -it fieldsight_web bash 
