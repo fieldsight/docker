@@ -15,7 +15,6 @@ services:
       - ./fixes/gcloud/settings.yaml:/usr/src/data/settings.yaml
       - ./fixes/gcloud/drive_credentials.json:/usr/src/drive_credentials.json
       - ./scripts/run_fieldsight.sh:/usr/src/data/scripts/run_fieldsight.sh
-      - ../fieldsight:/usr/src/data
     ports:
       - 8001:8001
     env_file:
