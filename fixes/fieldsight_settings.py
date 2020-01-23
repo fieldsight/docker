@@ -229,7 +229,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT= os.path.join(BASE_DIR,'static')
 
 SITE_URL = os.environ.get('KOBOCAT_URL')
-MEDIA_URL = '%s/media/'%os.environ.get('KOBOCAT_URL')
+# MEDIA_URL = '%s/media/'%os.environ.get('KOBOCAT_URL')
 
 DEFAULT_FORM_2 = {
     'id_string': 'a4MJ2XJ9LEogrkCd8CsHvq',
@@ -257,4 +257,18 @@ CACHES = {
     }
 }
 INTERNAL_IPS = ['127.0.0.1']
-MEDIA_LOCATION_URL = "https://naxafieldsight.s3.amazonaws.com/"
+
+SERVICE_ACCOUNT_JSON =  os.environ.get('SERVICE_ACCOUNT_JSON', 'service_account.json')
+SERVICE_ACCOUNT_EMAIL = os.environ.get('SERVICE_ACCOUNT_EMAIL', '.iam.gserviceaccount.com')
+REPORT_ACCOUNT_EMAIL = os.environ.get('REPORT_ACCOUNT_EMAIL', '@gmail.com')
+
+
+#bucket media path given by google
+MEDIA_LOCATION_URL =  os.environ.get('MEDIA_LOCATION_URL', 'https://testbucket.gcloud.com/')
+
+
+DEFAULT_FILE_STORAGE = os.environ.get('DEFAULT_FILE_STORAGE', 'django.core.files.storage.FileSystemStorage')
+GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME', '')
+GS_PROJECT_ID = os.environ.get('GS_BUCKET_NAME', '')
+
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', "storage_credentials.json" )

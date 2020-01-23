@@ -11,6 +11,9 @@ services:
       - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
       - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/local_settings.py
+      - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
+      - ./fixes/gcloud/settings.yaml:/usr/src/data/settings.yaml
+      - ./fixes/gcloud/drive_credentials.json:/usr/src/drive_credentials.json
       - ./scripts/run_fieldsight.sh:/usr/src/data/scripts/run_fieldsight.sh
       - ../fieldsight:/usr/src/data
     ports:
@@ -39,7 +42,7 @@ services:
       - ./fixes/local_settings.py:/srv/src/kpi/kobo/local_settings.py
       - ./log/kpi:/srv/logs
       - ./scripts/run_kpi.sh:/srv/src/kpi/scripts/run_kpi.sh
-      - ./.vols/media/fieldsight/:/srv/src/kobocat/media/
+      - ./.vols/media/kpi/:/srv/src/kpi/media/
     ports:
       - 8000:8000
     depends_on:
