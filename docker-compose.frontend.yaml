@@ -2,7 +2,7 @@ version: '3'
 
 services:
   fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.1
+    image: fieldsightdocker/fieldsight_web:0.0.2
     restart: always
     hostname: kobo
     container_name: fieldsight_web
@@ -15,7 +15,6 @@ services:
       - ./fixes/gcloud/settings.yaml:/usr/src/data/settings.yaml
       - ./fixes/gcloud/drive_credentials.json:/usr/src/drive_credentials.json
       - ./scripts/run_fieldsight.sh:/usr/src/data/scripts/run_fieldsight.sh
-      - ../fieldsight:/usr/src/data
     ports:
       - 8001:8001
     env_file:
