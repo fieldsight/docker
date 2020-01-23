@@ -69,27 +69,29 @@ This will create the default user name and password
 
 #### Basic troubleshooting
 
-Failing the postgres to up can cause the migration fail and shows the internal server error display in browser. Check if postgres is running or not
+- Failing the postgres to up can cause the migration fail and shows the internal 
+  server error display in browser. Check if postgres is running or not
 
-``` docker inspect -f '{{.State.Running}}' fieldsight_postgis ```
+  ``` docker inspect -f '{{.State.Running}}' fieldsight_postgis ```
 
-If Enketo keeps on failing, see the docker log
-``` docker logs -f --tail 100 fieldsight_enketo ```
+- If Enketo keeps on failing, see the docker log
+  ``` docker logs -f --tail 100 fieldsight_enketo ```
 
-Enketo failed to up if it donot find the config files. Make sure the config file exists in ```./fixes/config.json ``` . Another reason for enketo failing is if it doesnot find the redis host. Make sure to add the redis service name as host in ```config.json```
+- Enketo failed to up if it donot find the config files. Make sure the config file 
+  exists in ```./fixes/config.json ``` . Another reason for enketo failing is if it doesnot find the redis host. Make sure to add the redis service name as host in ```config.json```
 
-If nginx is already running on local machine stop it as the nginx is used here for reverse proxy. Check status
-``` sudo service nginx status ```
+- If nginx is already running on local machine stop it as the nginx is used here for 
+  reverse proxy. Check status
+  ``` sudo service nginx status ```
 
-Stop nginx 
+- Stop nginx 
+  ``` sudo service nginx stop ```
 
-``` sudo service nginx stop ```
+- Alternatively, it can be avoided by changing the port mount in 
+  ``` docker-compose-frontend.yaml ``` for nginx.
 
-Alternatively, it can be avoided by changing the port mount in ``` docker-compose-frontend.yaml ``` for nginx.
-
-
-
-
+- For permission issues in credintials json files in ``` ./fixes/gloud/ ```
+  ``` sudo chmod -R +x ./fixes/gcloud/. ```
 
 
 
