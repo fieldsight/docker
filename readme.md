@@ -75,6 +75,7 @@ This will create the default user name and password
   ``` docker inspect -f '{{.State.Running}}' fieldsight_postgis ```
 
 - If Enketo keeps on failing, see the docker log
+
   ``` docker logs -f --tail 100 fieldsight_enketo ```
 
 - Enketo failed to up if it donot find the config files. Make sure the config file 
@@ -82,15 +83,18 @@ This will create the default user name and password
 
 - If nginx is already running on local machine stop it as the nginx is used here for 
   reverse proxy. Check status
+
   ``` sudo service nginx status ```
 
 - Stop nginx 
+
   ``` sudo service nginx stop ```
 
-- Alternatively, it can be avoided by changing the port mount in 
+  Alternatively, it can be avoided by changing the port mount in 
   ``` docker-compose-frontend.yaml ``` for nginx.
 
 - For permission issues in credintials json files in ``` ./fixes/gloud/ ```
+
   ``` sudo chmod -R +x ./fixes/gcloud/. ```
 
 
