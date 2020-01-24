@@ -34,9 +34,9 @@ Setting up docker
 
    ```
      cd ./fixes
-     cp drive_credintials_sample.json ./drive_credintials.json
+     cp drive_credentials_sample.json ./drive_credentials.json
      cp service_account_sample.json ./service_account.json
-     cp settings_sample.json ./settings.json
+     cp settings_sample.yaml ./settings.yaml
      cp storage_credentials_sample.json ./storage_credentials.json
 
    ```
