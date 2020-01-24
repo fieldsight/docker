@@ -29,7 +29,7 @@ services:
         aliases:
           - kobo
   kpi:
-    image: fieldsightdocker/fieldsight-kpi:0.0.1
+    image: fieldsightdocker/fieldsight-kpi:0.0.2
     restart: on-failure
     hostname: kpi
     container_name: fieldsight_kpi
