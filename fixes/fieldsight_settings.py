@@ -272,3 +272,4 @@ GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME', '')
 GS_PROJECT_ID = os.environ.get('GS_PROJECT_ID', '')
 
 GOOGLE_APPLICATION_CREDENTIALS = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', "storage_credentials.json" )
+GS_EXPIRATION = os.environ.get('GS_EXPIRATION', 86400 * 365 * 100)
