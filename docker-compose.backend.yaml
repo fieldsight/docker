@@ -99,7 +99,10 @@ services:
       - redis_main
       - memcached
     volumes:
-      - ./fixes/fieldsight_settings.py:/usr/src/data/onadata/settings/local_settings.py
+      - ./.vols/media/fieldsight/:/usr/src/data/media/
+      - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
+      - ./fixes/gcloud/settings.yaml:/usr/src/data/settings.yaml
+      - ./fixes/gcloud/drive_credentials.json:/usr/src/drive_credentials.json
     networks:
       fieldsight-network:
         aliases:
@@ -123,7 +126,7 @@ services:
       - redis_main
       - memcached
     volumes:
-      - ./fixes/local_settings.py:/srv/src/kpi/kobo/local_settings.py
+      - ./.vols/media/kpi/:/srv/src/kpi/media/
     networks:
       fieldsight-network:
         aliases:
