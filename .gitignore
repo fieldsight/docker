@@ -6,3 +6,6 @@ config.json
 .backup/
 log/
 .idea/
+fixes/gcloud/credentials.json
+fixes/gcloud/settings.yaml
+fixes/gcloud/service_account.json
