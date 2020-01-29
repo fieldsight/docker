@@ -2,7 +2,7 @@ version: '3'
 
 services:
   fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.2
+    image: fieldsightdocker/fieldsight_web:0.0.3
     restart: always
     hostname: kobo
     container_name: fieldsight_web
@@ -27,7 +27,7 @@ services:
         aliases:
           - kobo
   kpi:
-    image: fieldsightdocker/fieldsight-kpi:0.0.2
+    image: fieldsightdocker/fieldsight-kpi:0.0.3
     restart: on-failure
     hostname: kpi
     container_name: fieldsight_kpi
@@ -50,7 +50,7 @@ services:
           - kpi
 
   enketo:
-    image: fieldsightdocker/fieldsight_enketo:0.0.1
+    image: fieldsightdocker/fieldsight_enketo:0.0.2
     restart: on-failure
     container_name: fieldsight_enketo
     command: /bin/bash ./scripts/run_enketo.sh
