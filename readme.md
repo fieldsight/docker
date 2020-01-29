@@ -34,11 +34,10 @@ Setting up docker
 
    ```
      cd ./fixes
-     cp drive_credentials_sample.json ./drive_credentials.json
+     cp credentials_sample.json ./credentials.json
      cp service_account_sample.json ./service_account.json
      cp settings_sample.yaml ./settings.yaml
-     cp storage_credentials_sample.json ./storage_credentials.json
-
+     
    ```
    Replace the content of copy of sample with actual project credentails.
 
