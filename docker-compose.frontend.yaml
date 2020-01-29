@@ -50,10 +50,10 @@ services:
           - kpi
 
   enketo:
-    image: fieldsightdocker/fieldsight_enketo:0.0.2
+    image: fieldsightdocker/fieldsight_enketo:0.0.3
     restart: on-failure
     container_name: fieldsight_enketo
-    command: /bin/bash ./scripts/run_enketo.sh
+    command: /bin/bash ./run_enketo.sh
     volumes:
       - ./fixes/config.json:/srv/src/enketo_express/config/config.json
     env_file:
