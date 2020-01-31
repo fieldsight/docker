@@ -81,7 +81,7 @@ services:
           - redis_cache
   
   celery_fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.3
+    image: fieldsightdocker/fieldsight_web:0.0.4
     restart: on-failure
     container_name: celery_fieldsight
     command: celery -A onadata worker -l Info

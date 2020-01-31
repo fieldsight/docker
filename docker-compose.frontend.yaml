@@ -2,7 +2,7 @@ version: '3'
 
 services:
   fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.3
+    image: fieldsightdocker/fieldsight_web:0.0.4
     restart: always
     hostname: kobo
     container_name: fieldsight_web
