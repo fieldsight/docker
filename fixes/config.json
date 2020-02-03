@@ -3,7 +3,7 @@
     "port": "8005",
     "offline enabled": true,
     "linked form and data server": {
-        "name": "KoBoCAT",
+        "name": "Fieldsight",
         "server url": "",
         "api key": "enketorules",
         "legacy formhub": false,
@@ -23,7 +23,7 @@
         "submissions": false
     },
     "support": {
-        "email": "support@kobotoolbox.org"
+        "email": "support@fieldsight.org"
     },
     "widgets": [
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
