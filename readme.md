@@ -15,6 +15,9 @@ Fieldsight Docker
  2. Postgis(postgres extension)
  3. Redis
  4. Memcached
+ 5. Corn Jobs
+ 
+
 
 Setting up docker
 ==================
@@ -30,7 +33,7 @@ Setting up docker
    ``` cd nginx ```
    
 4. Change the glcoud credintials. Filedsight uses the google bucket storage to store  
-  media file
+  media file, Google drive and sheet services for reports and auto sync data to sheets.
 
    ```
      cd ./fixes
