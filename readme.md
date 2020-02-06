@@ -15,7 +15,7 @@ Fieldsight Docker
  2. Postgis(postgres extension)
  3. Redis
  4. Memcached
- 5. Corn Jobs
+ 5. Celery
  
 
 
