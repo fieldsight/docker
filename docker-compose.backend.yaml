@@ -79,9 +79,9 @@ services:
       fieldsight-network:
         aliases:
           - redis_cache
-  
+ 
   celery_fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.5
+    image: fieldsightdocker/fieldsight_web:0.0.6
     restart: on-failure
     container_name: celery_fieldsight
     command: celery -A onadata worker -l Info
@@ -108,10 +108,11 @@ services:
         aliases:
           - celery_fieldsight
   
-  corn_fieldsight:
-    image: fieldsightdocker/fieldsight_corn:0.0.1
+  celery_beat_fieldsight:
+    image: fieldsightdocker/fieldsight_web:0.0.6
     restart: on-failure
-    container_name: corn_fieldsight
+    container_name: celery_beat_fieldsight
+    command: celery -A onadata beat
     environment:
       C_FORCE_ROOT: "yes"
     env_file:
@@ -133,7 +134,36 @@ services:
     networks:
       fieldsight-network:
         aliases:
-          - corn_fieldsight
+          - celery_beat_fieldsight
+  
+  worker_celery_beat:
+    image: fieldsightdocker/fieldsight_web:0.0.6
+    restart: on-failure
+    container_name: worker_celery_beat
+    command: celery -A onadata worker -l Info -Q beat
+    environment:
+      C_FORCE_ROOT: "yes"
+    env_file:
+      - env.txt
+      - db.txt
+    links:
+      - postgres
+      - redis_main
+      - memcached
+    depends_on:
+      - postgres
+      - redis_main
+      - memcached
+    volumes:
+      - ./.vols/media/fieldsight/:/usr/src/data/media/
+      - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
+      - ./fixes/gcloud/settings.yaml:/usr/src/data/settings.yaml
+      - ./fixes/gcloud/credentials.json:/usr/src/data/credentials.json
+    networks:
+      fieldsight-network:
+        aliases:
+          - worker_celery_beat
+
 
   celery_kpi:
     image: fieldsightdocker/fieldsight-kpi:0.0.3
