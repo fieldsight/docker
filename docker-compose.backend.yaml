@@ -81,7 +81,7 @@ services:
           - redis_cache
  
   celery_fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.6
+    image: fieldsightdocker/fieldsight_web:0.0.7
     restart: on-failure
     container_name: celery_fieldsight
     command: celery -A onadata worker -l Info
@@ -109,7 +109,7 @@ services:
           - celery_fieldsight
   
   celery_beat_fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.6
+    image: fieldsightdocker/fieldsight_web:0.0.7
     restart: on-failure
     container_name: celery_beat_fieldsight
     command: celery -A onadata beat
@@ -137,7 +137,7 @@ services:
           - celery_beat_fieldsight
   
   worker_celery_beat:
-    image: fieldsightdocker/fieldsight_web:0.0.6
+    image: fieldsightdocker/fieldsight_web:0.0.7
     restart: on-failure
     container_name: worker_celery_beat
     command: celery -A onadata worker -l Info -Q beat
