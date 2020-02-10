@@ -84,7 +84,7 @@ services:
     image: fieldsightdocker/fieldsight_web:0.0.7
     restart: on-failure
     container_name: celery_fieldsight
-    command: celery -A onadata worker -l Info
+    command: celery -A onadata worker -l Info -Q kobocat_queue
     environment:
       C_FORCE_ROOT: "yes"
     env_file:
