@@ -8,11 +8,10 @@ services:
     container_name: fieldsight_web
     command: /bin/bash ./scripts/run_fieldsight.sh
     volumes:
+      - ./log/fieldsight:/srv/logs/fieldsight/
       - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
       - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
-      - ./fixes/gcloud/settings.yaml:/usr/src/data/settings.yaml
-      - ./fixes/gcloud/credentials.json:/usr/src/data/credentials.json
     ports:
       - 8001:8001
     env_file:
