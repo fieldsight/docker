@@ -1,0 +1,36 @@
+version: '3'
+services:
+#  nginx:
+#    image: nginx:1.17.2-alpine
+#    hostname: nginx
+#    container_name: fieldsight_nginx
+#    volumes:
+#      - ./nginxlog/:/var/log/nginx/
+#      - ./nginx/:/etc/nginx/conf.d/
+#      - ./.vols/static/:/static
+#      - ./.vols/media/:/media
+#      - ./certbot/conf:/etc/letsencrypt/
+#      - ./certbot/www:/var/www/certbot/
+#    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+#    ports:
+#      - 80:80
+#      - 443:443
+#    networks:
+#      fieldsight-network:
+#        aliases:
+#          - nginx
+#          - fskpi.naxa.com.np
+#          - fsenk.naxa.com.np
+#          - fs.naxa.com.np
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    hostname: certbot
+    volumes: 
+      - ./certbot/conf/:/etc/letsencrypt/
+      - ./certbot/www/:/var/www/certbot/
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+networks:
+  fieldsight-network:
+    driver: bridge

@@ -2,16 +2,17 @@ version: '3'
 
 services:
   fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.8
+    image: fieldsightdocker/fieldsight_web:0.0.8.3
     restart: always
     hostname: kobo
     container_name: fieldsight_web
     command: /bin/bash ./scripts/run_fieldsight.sh
     volumes:
-      - ./log/fieldsight:/srv/logs/fieldsight/
+      - ./log/fieldsight:/srv/logs/fieldsight
       - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
       - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
+      - ./sock/:/sock/
     ports:
       - 8001:8001
     env_file:
@@ -75,9 +76,12 @@ services:
     volumes:
       - ./nginxlog/:/var/log/nginx/
       - ./nginx/:/etc/nginx/conf.d/
-      - ./certs/:/etc/ssl/certs/
       - ./.vols/static/:/static
       - ./.vols/media/:/media
+      - ./certbot/conf:/etc/letsencrypt/
+      - ./certbot/www:/var/www/certbot/
+      - ./sock/:/sock/
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     ports:
       - 80:80
       - 443:443
@@ -89,10 +93,9 @@ services:
       fieldsight-network:
         aliases:
           - nginx
-          - kpi.fieldsight.test
-          - enketo.fieldsight.test
-          - kobo.fieldsight.test
-
+          - fskpi.naxa.com.np
+          - fsenk.naxa.com.np
+          - fs.naxa.com.np
 networks:
   fieldsight-network:
     driver: bridge

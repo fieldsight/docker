@@ -1,189 +1,101 @@
 version: '3'
 
 services:
-  postgres:
-    image: mdillon/postgis:9.5
-    container_name: fieldsight_postgis
+  fieldsight:
+    image: fieldsightdocker/fieldsight_web:0.0.8.3
     restart: always
+    hostname: kobo
+    container_name: fieldsight_web
+    command: /bin/bash ./scripts/run_fieldsight.sh
     volumes:
-      - ./.backup/postgres-data/:/var/lib/postgresql/data
-      - ./log/postgres:/srv/logs
-    ports:
-      - 5432:5432
-    env_file:
-      - db.txt
-    networks:
-      fieldsight-network:
-        aliases:
-          - postgres
-
-  memcached:
-    image: rbekker87/memcached:alpine
-    container_name: fieldsight_memcached
-    environment:
-      - MEMCACHED_MEMUSAGE=32
-    ports:
-      - 11211:11211
-    networks:
-      fieldsight-network:
-        aliases:
-          - memcached          
-  mongo:
-    image: mongo:3.0
-    hostname: mongo
-    container_name: fieldsight_mongo
-    volumes:
-      - ./.backup/mongo-data:/data/db
-      - ./log/mongo:/srv/logs
-    environment:
-      - MONGO_DATA=/data/db
-    env_file:
-      - env.txt
-      - db.txt
-    ports:
-      - 27017:27017
-    restart: on-failure
-    networks:
-      fieldsight-network:
-        aliases:
-          - mongo
-
-  redis_main:
-    image: redis:3.2
-    restart: always
-    container_name: fieldsight_redis_main
-    volumes:
-      - ./.backup/redis-data:/data
-      - ./log/redis_main:/var/log/redis
-    ports:
-      - 6379:6379
-    sysctls:
-      - net.core.somaxconn=2048
-    networks:
-      fieldsight-network:
-        aliases:
-          - redis_main
-
-  redis_cache:
-    image: redis:3.2
-    restart: on-failure
-    volumes:
-      - ./.backup/redis-data:/data
-      - ./log/redis_cache:/var/log/redis
-    container_name: fieldsight_redis_cache
-    ports:
-      - 6380:6380
-    sysctls:
-        - net.core.somaxconn=2048
-    networks:
-      fieldsight-network:
-        aliases:
-          - redis_cache
- 
-  celery_fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.8
-    restart: on-failure
-    container_name: celery_fieldsight
-    command: celery -A onadata worker -l Info -Q kobocat_queue
-    environment:
-      C_FORCE_ROOT: "yes"
-    env_file:
-      - env.txt
-      - db.txt
-    links:
-      - postgres
-      - redis_main
-      - memcached
-    depends_on:
-      - postgres
-      - redis_main
-      - memcached
-    volumes:
+      - ./log/fieldsight:/srv/logs/fieldsight
+      - ./.vols/static/fieldsight/:/usr/src/data/onadata/static/
       - ./.vols/media/fieldsight/:/usr/src/data/media/
       - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
-    networks:
-      fieldsight-network:
-        aliases:
-          - celery_fieldsight
-  
-  celery_beat_fieldsight:
-    image: fieldsightdocker/fieldsight_web:0.0.8
-    restart: on-failure
-    container_name: celery_beat_fieldsight
-    command: celery -A onadata beat
-    environment:
-      C_FORCE_ROOT: "yes"
+      - ./sock/:/sock/
+    ports:
+      - 8001:8001
     env_file:
       - env.txt
       - db.txt
-    links:
-      - postgres
-      - redis_main
-      - memcached
     depends_on:
       - postgres
+      - mongo
       - redis_main
-      - memcached
-    volumes:
-      - ./.vols/media/fieldsight/:/usr/src/data/media/
-      - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
-      
     networks:
       fieldsight-network:
         aliases:
-          - celery_beat_fieldsight
-  
-  worker_celery_beat:
-    image: fieldsightdocker/fieldsight_web:0.0.8
-    restart: on-failure
-    container_name: worker_celery_beat
-    command: celery -A onadata worker -l Info -Q beat
-    environment:
-      C_FORCE_ROOT: "yes"
-    env_file:
-      - env.txt
-      - db.txt
-    links:
-      - postgres
-      - redis_main
-      - memcached
-    depends_on:
-      - postgres
-      - redis_main
-      - memcached
-    volumes:
-      - ./.vols/media/fieldsight/:/usr/src/data/media/
-      - ./fixes/gcloud/service_account.json:/usr/src/data/service_account.json
-    networks:
-      fieldsight-network:
-        aliases:
-          - worker_celery_beat
-
-
-  celery_kpi:
+          - kobo
+  kpi:
     image: fieldsightdocker/fieldsight-kpi:0.0.3
-    command: celery -A kobo worker -l Info
-    container_name: celery_kpi
-    environment:
-      C_FORCE_ROOT: "yes"
+    restart: on-failure
+    hostname: kpi
+    container_name: fieldsight_kpi
+    command: /bin/bash ./scripts/run_kpi.sh
     env_file:
       - env.txt
       - db.txt
-    links:
-      - postgres
-      - redis_main
-      - memcached
+    volumes:
+      - ./log/kpi:/srv/logs
+      - ./.vols/media/kpi/:/srv/src/kpi/media/
+    ports:
+      - 8000:8000
     depends_on:
       - postgres
+      - mongo
       - redis_main
-      - memcached
-    volumes:
-      - ./.vols/media/kpi/:/srv/src/kpi/media/
     networks:
       fieldsight-network:
         aliases:
-          - celery_kpi
+          - kpi
+
+  enketo:
+    image: fieldsightdocker/fieldsight_enketo:0.0.4
+    restart: on-failure
+    container_name: fieldsight_enketo
+    command: /bin/bash ./run_enketo.sh
+    volumes:
+      - ./fixes/config.json:/srv/src/enketo_express/config/config.json
+    env_file:
+      - env.txt
+      - db.txt
+    ports:
+      - 8005:8005
+    depends_on:
+      - redis_main
+      - redis_cache
+    networks:
+      fieldsight-network:
+        aliases:
+          - enketo_express
+
+  nginx:
+    image: nginx:1.17.2-alpine
+    hostname: nginx
+    container_name: fieldsight_nginx
+    volumes:
+      - ./nginxlog/:/var/log/nginx/
+      - ./nginx/:/etc/nginx/conf.d/
+      - ./.vols/static/:/static
+      - ./.vols/media/:/media
+      - ./certbot/conf:/etc/letsencrypt/
+      - ./certbot/www:/var/www/certbot/
+      - ./sock/:/sock/
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - enketo
+      - kpi
+      - fieldsight
+    networks:
+      fieldsight-network:
+        aliases:
+          - nginx
+          - fskpi.naxa.com.np
+          - fsenk.naxa.com.np
+          - fs.naxa.com.np
 networks:
   fieldsight-network:
-    external:
-      name: fieldsight-network
+    driver: bridge
